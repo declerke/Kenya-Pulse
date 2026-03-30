@@ -1,11 +1,3 @@
-"""
-KenyaPulse — Regional Comparison Page
-
-Benchmarks Kenya against 6 African peers across economic and social
-indicators. Includes a radar / spider chart for multi-dimensional scoring,
-ranked horizontal bar charts, and time-series multi-line comparisons.
-"""
-
 import streamlit as st
 
 from config import COMPARISON_COUNTRIES, RADAR_INDICATORS
@@ -22,10 +14,6 @@ st.set_page_config(
     page_icon="🌍",
     layout="wide",
 )
-
-# ---------------------------------------------------------------------------
-# Sidebar controls
-# ---------------------------------------------------------------------------
 
 with st.sidebar:
     st.markdown("## 🌍 Regional Comparison")
@@ -80,15 +68,7 @@ with st.sidebar:
     st.page_link("pages/1_Economic_Indicators.py",  label="💹 Economic Indicators")
     st.page_link("pages/2_Social_Indicators.py",    label="👥 Social Indicators")
 
-# ---------------------------------------------------------------------------
-# Resolve selected country codes
-# ---------------------------------------------------------------------------
-
 sel_codes = [COMPARISON_COUNTRIES[c] for c in selected_countries]
-
-# ---------------------------------------------------------------------------
-# Header
-# ---------------------------------------------------------------------------
 
 st.markdown("# 🌍 Regional Comparison")
 st.caption(
@@ -96,10 +76,6 @@ st.caption(
     "Source: World Bank Open Data"
 )
 st.divider()
-
-# ---------------------------------------------------------------------------
-# Section 1 — Radar Chart (multi-indicator snapshot)
-# ---------------------------------------------------------------------------
 
 st.subheader("Multi-Indicator Performance Snapshot")
 st.caption(
@@ -116,7 +92,6 @@ with st.spinner("Building radar chart..."):
             continue
         for _, row in df_snap.iterrows():
             country_name = row["country"]
-            # Resolve the country name as returned by World Bank → match our list
             match = next(
                 (n for n in selected_countries if n.lower() in country_name.lower()
                  or country_name.lower() in n.lower()),
@@ -134,10 +109,6 @@ with st.spinner("Building radar chart..."):
 
 st.divider()
 
-# ---------------------------------------------------------------------------
-# Section 2 — Multi-line trend
-# ---------------------------------------------------------------------------
-
 st.subheader(f"Trend Comparison: {compare_indicator}")
 
 ind_code = INDICATOR_MAP[compare_indicator]
@@ -147,7 +118,6 @@ if not df_trend.empty:
     df_trend = df_trend[
         (df_trend["year"] >= year_range[0]) & (df_trend["year"] <= year_range[1])
     ]
-    # Normalise country name display
     fig_line = multi_line_chart(
         df_trend,
         title=f"{compare_indicator} — {year_range[0]}–{year_range[1]}",
@@ -158,10 +128,6 @@ else:
     st.info("Trend data currently unavailable for the selected indicator.")
 
 st.divider()
-
-# ---------------------------------------------------------------------------
-# Section 3 — Ranked bar: GDP per capita
-# ---------------------------------------------------------------------------
 
 st.subheader("Ranked Comparison — GDP Per Capita (Latest Available)")
 
@@ -195,10 +161,6 @@ with col_b:
 
 st.divider()
 
-# ---------------------------------------------------------------------------
-# Section 4 — Internet + Electricity snapshot
-# ---------------------------------------------------------------------------
-
 st.subheader("Digital & Infrastructure Access — Latest Snapshot")
 
 col_c, col_d = st.columns(2)
@@ -230,10 +192,6 @@ with col_d:
         st.info("Electricity access snapshot unavailable.")
 
 st.divider()
-
-# ---------------------------------------------------------------------------
-# Summary
-# ---------------------------------------------------------------------------
 
 st.subheader("Regional Intelligence Summary")
 st.info(
