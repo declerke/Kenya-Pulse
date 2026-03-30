@@ -1,11 +1,3 @@
-"""
-KenyaPulse — Central configuration: indicators, countries, formatting, and color palette.
-"""
-
-# ---------------------------------------------------------------------------
-# Indicators
-# ---------------------------------------------------------------------------
-
 ECONOMIC_INDICATORS: dict[str, str] = {
     "GDP (Current US$)": "NY.GDP.MKTP.CD",
     "GDP Growth Rate (%)": "NY.GDP.MKTP.KD.ZG",
@@ -28,10 +20,6 @@ SOCIAL_INDICATORS: dict[str, str] = {
 
 ALL_INDICATORS: dict[str, str] = {**ECONOMIC_INDICATORS, **SOCIAL_INDICATORS}
 
-# ---------------------------------------------------------------------------
-# Countries for regional comparison
-# ---------------------------------------------------------------------------
-
 COMPARISON_COUNTRIES: dict[str, str] = {
     "Kenya": "KE",
     "Tanzania": "TZ",
@@ -42,10 +30,6 @@ COMPARISON_COUNTRIES: dict[str, str] = {
     "Nigeria": "NG",
 }
 
-# ---------------------------------------------------------------------------
-# Home-page KPI definitions
-# ---------------------------------------------------------------------------
-
 HOME_KPIS: list[dict] = [
     {"label": "GDP",             "code": "NY.GDP.MKTP.CD",    "fmt": "billions_usd", "icon": "💰"},
     {"label": "GDP Growth",      "code": "NY.GDP.MKTP.KD.ZG", "fmt": "percent",      "icon": "📈"},
@@ -55,10 +39,6 @@ HOME_KPIS: list[dict] = [
     {"label": "Internet Access", "code": "IT.NET.USER.ZS",    "fmt": "percent",      "icon": "🌐"},
 ]
 
-# ---------------------------------------------------------------------------
-# Radar-chart indicators (must be on comparable scales after normalisation)
-# ---------------------------------------------------------------------------
-
 RADAR_INDICATORS: dict[str, str] = {
     "GDP Per Capita":   "NY.GDP.PCAP.CD",
     "Life Expectancy":  "SP.DYN.LE00.IN",
@@ -67,10 +47,6 @@ RADAR_INDICATORS: dict[str, str] = {
     "Internet Access":  "IT.NET.USER.ZS",
     "Urban Population": "SP.URB.TOTL.IN.ZS",
 }
-
-# ---------------------------------------------------------------------------
-# Visual constants
-# ---------------------------------------------------------------------------
 
 KENYA_GREEN   = "#006600"
 KENYA_RED     = "#BB0000"
