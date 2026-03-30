@@ -95,7 +95,7 @@ kenyapulse/
 ### 💹 Economic Indicators — Trend
 ![Economic Trend](screenshots/trend.png)
 
-### 👥 Social Indicators
+### 👥 Social Indicators - Population
 ![Social Indicators](screenshots/social%20indicators.png)
 
 ### 👥 Social Indicators — Health
