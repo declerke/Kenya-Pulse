@@ -1,19 +1,6 @@
-"""
-KenyaPulse — Home / Overview Page
-
-Displays six live KPI cards sourced from the World Bank API, a brief
-narrative about Kenya's development trajectory, and quick-navigation
-cards to the three analytical sections.
-"""
-
 import streamlit as st
-
 from config import HOME_KPIS
 from utils.api import fetch_indicator
-
-# ---------------------------------------------------------------------------
-# Page config  (must be the very first Streamlit call)
-# ---------------------------------------------------------------------------
 
 st.set_page_config(
     page_title="KenyaPulse — Kenya Intelligence Dashboard",
@@ -22,17 +9,11 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ---------------------------------------------------------------------------
-# Global CSS
-# ---------------------------------------------------------------------------
-
 st.markdown(
     """
     <style>
-        /* ── Sidebar ── */
         section[data-testid="stSidebar"] { background-color: #f7f9f7; }
 
-        /* ── KPI card ── */
         div[data-testid="metric-container"] {
             background: #ffffff;
             border: 1px solid #e0e0e0;
@@ -52,7 +33,6 @@ st.markdown(
             color: #1a1a1a;
         }
 
-        /* ── Nav cards ── */
         .nav-card {
             background: #ffffff;
             border: 1px solid #ddd;
@@ -65,16 +45,11 @@ st.markdown(
         .nav-card h3 { color: #006600; margin-bottom: 6px; }
         .nav-card p  { color: #666; font-size: 0.9rem; margin: 0; }
 
-        /* ── Divider accent ── */
         hr { border-top: 2px solid #006600 !important; }
     </style>
     """,
     unsafe_allow_html=True,
 )
-
-# ---------------------------------------------------------------------------
-# Sidebar
-# ---------------------------------------------------------------------------
 
 with st.sidebar:
     st.image(
@@ -89,16 +64,12 @@ with st.sidebar:
     )
     st.divider()
     st.markdown("**Navigate**")
-    st.page_link("Home.py",                         label="🏠 Overview")
+    st.page_link("Home.py",                           label="🏠 Overview")
     st.page_link("pages/1_Economic_Indicators.py",  label="💹 Economic Indicators")
     st.page_link("pages/2_Social_Indicators.py",    label="👥 Social Indicators")
     st.page_link("pages/3_Regional_Comparison.py",  label="🌍 Regional Comparison")
     st.divider()
     st.caption("Built by Ian Mwendwa · Powered by [World Bank Open Data](https://data.worldbank.org/)")
-
-# ---------------------------------------------------------------------------
-# Header
-# ---------------------------------------------------------------------------
 
 st.markdown(
     """
@@ -116,10 +87,6 @@ st.caption(
 )
 
 st.divider()
-
-# ---------------------------------------------------------------------------
-# KPI Cards  — one row of 6 metrics
-# ---------------------------------------------------------------------------
 
 st.subheader("At a Glance — Kenya Key Indicators")
 
@@ -144,7 +111,6 @@ for col, kpi in zip(cols, HOME_KPIS):
     raw_val = float(latest["value"])
     display = _FMT[kpi["fmt"]](raw_val)
 
-    # Compute delta for trend arrow
     delta_str = None
     delta_clr = "normal"
     if prev is not None:
@@ -152,7 +118,6 @@ for col, kpi in zip(cols, HOME_KPIS):
         raw_delta = raw_val - prev_val
         delta_str = _FMT[kpi["fmt"]](abs(raw_delta))
         delta_str = ("+" if raw_delta >= 0 else "−") + delta_str
-        # Inflation & unemployment: lower is better → invert colour
         if kpi["code"] in ("FP.CPI.TOTL.ZG", "SL.UEM.TOTL.ZS", "SH.DYN.MORT"):
             delta_clr = "inverse"
 
@@ -164,10 +129,6 @@ for col, kpi in zip(cols, HOME_KPIS):
     )
 
 st.divider()
-
-# ---------------------------------------------------------------------------
-# Kenya Narrative
-# ---------------------------------------------------------------------------
 
 col_text, col_facts = st.columns([3, 2])
 
@@ -198,22 +159,18 @@ with col_facts:
     st.subheader("Quick Facts")
     facts = {
         "Capital":        "Nairobi",
-        "Region":         "Sub-Saharan Africa",
+        "Region":          "Sub-Saharan Africa",
         "Income Level":   "Lower Middle Income",
-        "Currency":       "Kenyan Shilling (KES)",
+        "Currency":        "Kenyan Shilling (KES)",
         "Official Lang.": "Swahili, English",
         "Government":     "Presidential Republic",
-        "Area":           "580,367 km²",
+        "Area":            "580,367 km²",
         "Neighbour EAC":  "TZ, UG, ET, SS, SO",
     }
     for k, v in facts.items():
         st.markdown(f"**{k}:** {v}")
 
 st.divider()
-
-# ---------------------------------------------------------------------------
-# Navigation Cards
-# ---------------------------------------------------------------------------
 
 st.subheader("Explore the Dashboard")
 
