@@ -1,21 +1,16 @@
-# ── Build stage ──────────────────────────────────────────────────────────────
 FROM python:3.11-slim AS base
 
 WORKDIR /app
 
-# Install dependencies first (layer-cached)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# ── Runtime stage ─────────────────────────────────────────────────────────────
 FROM base AS runtime
 
 COPY . .
 
-# Expose Streamlit default port
 EXPOSE 8501
 
-# Health-check so Docker Compose can report readiness
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
     CMD curl -f http://localhost:8501/_stcore/health || exit 1
 
