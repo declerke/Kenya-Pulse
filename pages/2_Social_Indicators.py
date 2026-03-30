@@ -1,13 +1,4 @@
-"""
-KenyaPulse — Social Indicators Page
-
-Tracks Kenya's human development progress: population, urbanisation,
-life expectancy, literacy, unemployment, internet penetration,
-electricity access.
-"""
-
 import streamlit as st
-
 from utils.api import fetch_indicator
 from utils.charts import bar_chart, donut_chart, line_chart
 
@@ -16,10 +7,6 @@ st.set_page_config(
     page_icon="👥",
     layout="wide",
 )
-
-# ---------------------------------------------------------------------------
-# Sidebar
-# ---------------------------------------------------------------------------
 
 with st.sidebar:
     st.markdown("## 👥 Social Indicators")
@@ -37,10 +24,6 @@ with st.sidebar:
     st.page_link("pages/1_Economic_Indicators.py",  label="💹 Economic Indicators")
     st.page_link("pages/3_Regional_Comparison.py",  label="🌍 Regional Comparison")
 
-# ---------------------------------------------------------------------------
-# Header
-# ---------------------------------------------------------------------------
-
 st.markdown("# 👥 Social Indicators")
 st.caption(
     f"Kenya human development metrics · {year_range[0]}–{year_range[1]} · "
@@ -48,19 +31,11 @@ st.caption(
 )
 st.divider()
 
-# ---------------------------------------------------------------------------
-# Helper
-# ---------------------------------------------------------------------------
-
 def load(code: str):
     df = fetch_indicator("KE", code)
     if df.empty:
         return df
     return df[(df["year"] >= year_range[0]) & (df["year"] <= year_range[1])].copy()
-
-# ---------------------------------------------------------------------------
-# Row 1 — Population + Urban/Rural split
-# ---------------------------------------------------------------------------
 
 st.subheader("Population")
 
@@ -99,7 +74,6 @@ with col2:
         )
         st.plotly_chart(fig, use_container_width=True)
 
-        # Trend line below the donut
         df_urb_f = df_urb[(df_urb["year"] >= year_range[0]) & (df_urb["year"] <= year_range[1])]
         if not df_urb_f.empty:
             fig2 = line_chart(
@@ -114,10 +88,6 @@ with col2:
         st.info("Urban population data unavailable.")
 
 st.divider()
-
-# ---------------------------------------------------------------------------
-# Row 2 — Life Expectancy + Under-5 Mortality
-# ---------------------------------------------------------------------------
 
 st.subheader("Health")
 
@@ -167,10 +137,6 @@ with col4:
 
 st.divider()
 
-# ---------------------------------------------------------------------------
-# Row 3 — Literacy + Unemployment
-# ---------------------------------------------------------------------------
-
 st.subheader("Education & Labour")
 
 col5, col6 = st.columns(2)
@@ -212,10 +178,6 @@ with col6:
         st.info("Unemployment data unavailable.")
 
 st.divider()
-
-# ---------------------------------------------------------------------------
-# Row 4 — Internet Access + Electricity
-# ---------------------------------------------------------------------------
 
 st.subheader("Digital & Infrastructure Access")
 
@@ -263,10 +225,6 @@ with col8:
         st.info("Electricity access data unavailable.")
 
 st.divider()
-
-# ---------------------------------------------------------------------------
-# Summary
-# ---------------------------------------------------------------------------
 
 st.subheader("Human Development Summary")
 st.info(
