@@ -1,12 +1,4 @@
-"""
-KenyaPulse — Economic Indicators Page
-
-Interactive time-series analysis of Kenya's macroeconomic performance:
-GDP, growth rate, per-capita income, inflation, trade, and FDI.
-"""
-
 import streamlit as st
-
 from config import ECONOMIC_INDICATORS
 from utils.api import fetch_indicator
 from utils.charts import bar_chart, line_chart
@@ -16,10 +8,6 @@ st.set_page_config(
     page_icon="💹",
     layout="wide",
 )
-
-# ---------------------------------------------------------------------------
-# Sidebar controls
-# ---------------------------------------------------------------------------
 
 with st.sidebar:
     st.markdown("## 💹 Economic Indicators")
@@ -38,10 +26,6 @@ with st.sidebar:
     st.page_link("pages/2_Social_Indicators.py",    label="👥 Social Indicators")
     st.page_link("pages/3_Regional_Comparison.py",  label="🌍 Regional Comparison")
 
-# ---------------------------------------------------------------------------
-# Header
-# ---------------------------------------------------------------------------
-
 st.markdown("# 💹 Economic Indicators")
 st.caption(
     f"Kenya macroeconomic performance · {year_range[0]}–{year_range[1]} · "
@@ -49,21 +33,12 @@ st.caption(
 )
 st.divider()
 
-# ---------------------------------------------------------------------------
-# Helper: filtered fetch
-# ---------------------------------------------------------------------------
-
-def load(code: str) -> "pd.DataFrame":  # noqa: F821
+def load(code: str) -> "pd.DataFrame":  
     import pandas as pd
     df = fetch_indicator("KE", code)
     if df.empty:
         return df
     return df[(df["year"] >= year_range[0]) & (df["year"] <= year_range[1])].copy()
-
-
-# ---------------------------------------------------------------------------
-# Row 1 — GDP absolute + GDP growth
-# ---------------------------------------------------------------------------
 
 st.subheader("Gross Domestic Product")
 
@@ -72,7 +47,7 @@ col1, col2 = st.columns(2)
 with col1:
     df_gdp = load("NY.GDP.MKTP.CD")
     if not df_gdp.empty:
-        df_gdp["value"] = df_gdp["value"] / 1e9  # convert to billions
+        df_gdp["value"] = df_gdp["value"] / 1e9  
         fig = line_chart(
             df_gdp,
             title="GDP — Current US$ (Billions)",
@@ -110,10 +85,6 @@ with col2:
 
 st.divider()
 
-# ---------------------------------------------------------------------------
-# Row 2 — GDP Per Capita + Inflation
-# ---------------------------------------------------------------------------
-
 st.subheader("Per Capita Income & Inflation")
 
 col3, col4 = st.columns(2)
@@ -146,7 +117,6 @@ with col4:
             color="#BB0000",
             show_negative_red=False,
         )
-        # Override bar colour: use a red scale for inflation
         fig.update_traces(
             marker_color=[
                 "#FF8A65" if v < 5 else "#EF5350" if v < 10 else "#B71C1C"
@@ -164,10 +134,6 @@ with col4:
         st.info("Inflation data currently unavailable.")
 
 st.divider()
-
-# ---------------------------------------------------------------------------
-# Row 3 — Trade + FDI
-# ---------------------------------------------------------------------------
 
 st.subheader("Trade & Foreign Investment")
 
@@ -211,10 +177,6 @@ with col6:
         st.info("FDI data currently unavailable.")
 
 st.divider()
-
-# ---------------------------------------------------------------------------
-# Summary insight box
-# ---------------------------------------------------------------------------
 
 st.subheader("Key Takeaways")
 

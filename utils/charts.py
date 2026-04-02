@@ -1,10 +1,3 @@
-"""
-Reusable Plotly chart builders for KenyaPulse.
-
-All functions return a plotly.graph_objects.Figure that can be passed
-directly to st.plotly_chart().
-"""
-
 from __future__ import annotations
 
 import numpy as np
@@ -13,11 +6,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from config import CHART_PALETTE, GRID_CLR, KENYA_GREEN, PLOT_BG
-
-
-# ---------------------------------------------------------------------------
-# Shared layout helper
-# ---------------------------------------------------------------------------
 
 def _base_layout(fig: go.Figure, title: str = "") -> go.Figure:
     fig.update_layout(
@@ -33,23 +21,12 @@ def _base_layout(fig: go.Figure, title: str = "") -> go.Figure:
     fig.update_yaxes(showgrid=True, gridcolor=GRID_CLR, zeroline=False)
     return fig
 
-
-# ---------------------------------------------------------------------------
-# Internal helpers
-# ---------------------------------------------------------------------------
-
 def _to_rgba(color: str, alpha: float = 0.08) -> str:
-    """Convert any supported color string to rgba() for fillcolor."""
     if color.startswith("rgb"):
         return color.replace(")", f", {alpha})").replace("rgb(", "rgba(")
     hex_c = color.lstrip("#")
     r, g, b = int(hex_c[0:2], 16), int(hex_c[2:4], 16), int(hex_c[4:6], 16)
     return f"rgba({r}, {g}, {b}, {alpha})"
-
-
-# ---------------------------------------------------------------------------
-# Single-country time series
-# ---------------------------------------------------------------------------
 
 def line_chart(
     df: pd.DataFrame,
@@ -58,7 +35,6 @@ def line_chart(
     color: str = KENYA_GREEN,
     fill: bool = True,
 ) -> go.Figure:
-    """Area/line chart for a single-country time series."""
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
@@ -77,7 +53,6 @@ def line_chart(
     fig.update_xaxes(title_text="Year", dtick=2)
     return _base_layout(fig, title)
 
-
 def bar_chart(
     df: pd.DataFrame,
     title: str,
@@ -85,7 +60,6 @@ def bar_chart(
     color: str = KENYA_GREEN,
     show_negative_red: bool = False,
 ) -> go.Figure:
-    """Vertical bar chart for annual comparisons."""
     if show_negative_red:
         bar_colors = [KENYA_GREEN if v >= 0 else "#BB0000" for v in df["value"]]
     else:
@@ -103,17 +77,11 @@ def bar_chart(
     fig.update_xaxes(title_text="Year", dtick=2)
     return _base_layout(fig, title)
 
-
-# ---------------------------------------------------------------------------
-# Multi-country charts
-# ---------------------------------------------------------------------------
-
 def multi_line_chart(
     df: pd.DataFrame,
     title: str,
     y_label: str,
 ) -> go.Figure:
-    """Multi-line chart for regional comparisons over time."""
     fig = px.line(
         df,
         x="year",
@@ -129,14 +97,12 @@ def multi_line_chart(
     fig.update_layout(legend_title_text="Country")
     return _base_layout(fig, title)
 
-
 def horizontal_bar(
     df: pd.DataFrame,
     title: str,
     x_label: str,
     highlight_country: str = "Kenya",
 ) -> go.Figure:
-    """Ranked horizontal bar chart with Kenya highlighted."""
     df_s = df.sort_values("value", ascending=True).copy()
     colors = [
         KENYA_GREEN if c == highlight_country else "#90CAF9"
@@ -155,18 +121,12 @@ def horizontal_bar(
     fig.update_yaxes(title_text="")
     return _base_layout(fig, title)
 
-
 def radar_chart(
     scores: dict[str, dict[str, float]],
     title: str,
 ) -> go.Figure:
-    """
-    Radar / spider chart comparing countries across normalised indicators.
-
-    `scores` format: { "Kenya": {"Indicator A": 0.8, "Indicator B": 0.6, ...}, ... }
-    """
     categories = list(next(iter(scores.values())).keys())
-    categories_closed = categories + [categories[0]]  # close the polygon
+    categories_closed = categories + [categories[0]]
 
     fig = go.Figure()
     for idx, (country, vals) in enumerate(scores.items()):
@@ -196,14 +156,12 @@ def radar_chart(
     )
     return fig
 
-
 def donut_chart(
     labels: list[str],
     values: list[float],
     title: str,
     colors: list[str] | None = None,
 ) -> go.Figure:
-    """Simple donut chart."""
     fig = go.Figure(
         go.Pie(
             labels=labels,
@@ -223,20 +181,9 @@ def donut_chart(
     )
     return fig
 
-
-# ---------------------------------------------------------------------------
-# Normalisation utility for radar chart
-# ---------------------------------------------------------------------------
-
 def normalise_for_radar(
     raw: dict[str, dict[str, float | None]],
 ) -> dict[str, dict[str, float]]:
-    """
-    Min-max normalise values per indicator across all countries so all axes
-    share a [0, 1] range on the radar chart.
-
-    `raw` format: { "Kenya": {"GDP Per Capita": 2100, ...}, "Tanzania": {...}, ... }
-    """
     indicators = list(next(iter(raw.values())).keys())
     result: dict[str, dict[str, float]] = {c: {} for c in raw}
 
